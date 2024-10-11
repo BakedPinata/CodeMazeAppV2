@@ -33,8 +33,12 @@ builder.Services.AddControllers();
 var app = builder.Build();
 
 /// <summary>
-/// Configure the HTTP request pipeline.
-/// Note that the order of adding middleware to the pipeline is important.
+/// Configure the HTTP request pipeline. Note that the order is important.
+/// Each middleware component in the pipeline can:
+/// - Pass the request to the next middleware component in the pipeline and also
+/// - It can execute some work before and after the next component in the pipeline
+/// Pipeline is built using request delegates which handle each request.
+/// To configure delegates, the Run, Map and Use extension methods are used.
 /// </summary>
 #region Configure Middleware
 

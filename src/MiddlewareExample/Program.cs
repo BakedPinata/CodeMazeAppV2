@@ -26,6 +26,37 @@ app.Use(async (context, next) =>
   Console.WriteLine($"3. Logic after executing the next delegate in the Use method.");
 });
 
+// Example middleware that assigns an anonymous method to the Map method.
+// Map method accepts a pathMatch string parameter it will compare to the start of the request path.
+// If they match, the app will execute the branch.
+// NOTE: Any component added after the Map method won't be executed even if
+// the Run method isn't used in the branch.
+app.Map("/usingmapbranch", builder =>
+{
+  builder.Use(async (context, next) =>
+  {
+    Console.WriteLine($"A. Map branch logic in the Use Method before the next delegate");
+    await next.Invoke();
+    Console.WriteLine($"C. Map branch logic in the Use method after the next delegate");
+  });
+  builder.Run(async context =>
+  {
+    Console.WriteLine($"B. Map branch response to the client in the run method");
+    await context.Response.WriteAsync("Hello from the map branch.");
+  });
+});
+
+// Example middleware that assigns an anonymous method to the MapWhen method.
+// MapWhen method uses the result of a delegate, that accepts HttpContext as a parameter, to
+// branch the request pipeline.
+app.MapWhen(context => context.Request.Query.ContainsKey("testquerystring"), builder =>
+{
+  builder.Run(async context =>
+  {
+    await context.Response.WriteAsync("Hello from the MapWhen brach.");
+  });
+});
+
 // Example middleware that assigns an anonymous method to the Run method. Since the Run method is
 // always terminal (end), any component added with this method will terminate the pipeline.
 // This is why the response from the controller is not returned.

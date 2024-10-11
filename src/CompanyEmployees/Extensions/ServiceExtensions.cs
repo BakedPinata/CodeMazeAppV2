@@ -29,4 +29,19 @@ public static class ServiceExtensions
           .WithMethods("POST", "GET")
           .WithHeaders("accept", "content-type"));*/
     });
+
+  /// <summary>
+  /// Configure an IIS integration to help with deployment to IIS.
+  /// <para>
+  /// For now we are not configuring any options and will use the defaults. For details see <see href="https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.iisoptions?view=aspnetcore-8.0#properties">the docs</see>.
+  /// </para>
+  /// </summary>
+  /// <param name="services"></param>
+  public static void ConfigureIISIntegration(this IServiceCollection services) =>
+    services.Configure<IISOptions>(options =>
+    {
+      /*options.AuthenticationDisplayName = null;
+      options.AutomaticAuthentication = true;
+      options.ForwardClientCertificate = true;*/
+    });
 }

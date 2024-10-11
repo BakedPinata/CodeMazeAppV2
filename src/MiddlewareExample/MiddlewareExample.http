@@ -4,3 +4,13 @@ GET {{HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+GET {{HostAddress}}/usingmapbranch/
+Accept: application/json
+
+###
+
+GET {{HostAddress}}?testquerystring=test
+Accept: application/json
+
+###

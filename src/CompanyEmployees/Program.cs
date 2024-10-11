@@ -24,13 +24,17 @@ builder.Services.AddControllers();
 #endregion
 
 /// <summary>
-/// A WebApplication we can use to add middleware components to the application's request
-/// pipeline.
+/// A WebApplication we can use to add middleware components to the application's request pipeline.
+/// WebApplication implements multiple interfaces like:
+/// - IHost - Can be used to start and stop the host
+/// - IApplicationBuilder - Used to build the middleware pipeline
+/// - IEndpointRouteBuilder - Used to add endpoints to the app
 /// </summary>
 var app = builder.Build();
 
 /// <summary>
 /// Configure the HTTP request pipeline.
+/// Note that the order of adding middleware to the pipeline is important.
 /// </summary>
 #region Configure Middleware
 
@@ -40,6 +44,7 @@ else
   // Adds the Strict-Transport-Security header
   app.UseHsts();
 
+// Add middleware responsible for forwarding from HTTP to HTTPS
 app.UseHttpsRedirection();
 // Enables static files - No path specified so the default wwwroot is used
 app.UseStaticFiles();
@@ -49,9 +54,9 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
   ForwardedHeaders = ForwardedHeaders.All
 });
 app.UseCors("CorsPolicy");
-
+// Adds middleware to the specified IApplicationBuilder to enable authorization capabilities
 app.UseAuthorization();
-
+// Adds enpoints from controller actions to the IEndpointRouteBuilder
 app.MapControllers();
 
 #endregion
